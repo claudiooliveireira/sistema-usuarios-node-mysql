@@ -1,0 +1,15 @@
+Sobre algumas partes desse projeto teste
+
+connetion.query(): É a função principal. Tudo que for escrito em SQL ( Comandos no banco ) vai dentro das aspas dela;
+
+IF NOT EXISTS: É uma boa prática para o script não quebrar, se caso roda-los duas vezes;
+
+console.table(rows): Uma forma de visualizar dados do MySQL de forma organizada no terminal
+
+Segurança (?): No INSERT usei pontos de interrogação '?', isso diz ao drive: " pegue o que está dentro da variável 'dados' e limpe antes de colocar no banco". Para protege o código de hackers.
+
+Ciclo CRUD
+Create - INSERT =  Para colocar dados.
+Read - SELECT  = Para buscar e ver os dados ( no Node e no Workbench).
+Updata - UPDATE = Para modificar um registro existente.
+Delete - DELETE = Para deletar e precisa do WHERE para não apagar tudo.
