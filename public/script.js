@@ -8,18 +8,22 @@ document.addEventListener('DOMContentLoaded', () => {
         // Limpa o corpo da tabela antes de preeencher ( boa prática )
         corpo.innerHTML = '';
 
-        // Percorre cada usuário e cria uma linha na tabela
+        // Percorre cada usuário e cria uma linha na tabela ( Linha da tabela )
         usuarios.forEach(user => {
             const linha = `
                 <tr>
                     <td>${user.id}</td>
                     <td>${user.nome}</td>
                     <td>${user.email}</td>
+                    <td>
+                    <button class="btn btn-danger btn-sm" onClick="excluirUsuario(${user.id})">Excluir</button> 
+                    </td>
                 </tr>`;
+                    
             corpo.innerHTML += linha;
         });
-    })
-    .catch(err => console.error('Erro ao buscar usuários:', err));
+        
+    }).catch(err => console.error('Erro ao buscar usuários:', err));
 })
 
 // Logica para capturar o clique do botão e enviar para o servidor
@@ -46,7 +50,41 @@ form.addEventListener('submit', (event) => {
     });
 });
 
+// Função de Excluir usuário
+function excluirUsuario(id) {
+    if (confirm('Tem certeza que deseja excluir este usuário?')){
+        fetch(`/usuarios/${id}`, {
+            method: 'DELETE'
+        }).then(() => {
+           
+            location.reload(); // Recarrega a lista atualizada
+            
+        }).catch(err => { 
+            console.error('Erro na requisição:', err);
+            alert('Erro ao conectar ao servidor')
+        });
+    }
 
+}
+
+/*
+// Função de Excluir usuário
+function excluirUsuario(id) {
+    if (confirm('Tem certeza que deseja excluir este usuário?')){
+        fetch(`/usuarios/${id}`, {
+            method: 'DELETE'
+        }).then(res=> {
+            if(res.ok) {
+                alert('Usuário removido com sucesso!');
+                location.reload(); // Recarrega a lista atualizada
+            } else {
+                alert('Erro ao excluir usuário' + res.status);
+            }
+        }).catch(err => console.error('Erro na requisição:', err));
+    }
+
+}
+    */
 
 
 

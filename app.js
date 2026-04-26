@@ -25,7 +25,7 @@ app.get('/usuarios', (req, res) => {
 // Rota para RECEBER os dados do formulário 
 app.post('/usuarios', (req, res) => {
     console.log('Dados recebidos do forulário:', req.body);
-    
+
     const {nome, email} = req.body; // Pegando os dados enviados
     const sql = 'INSERT INTO usuarios (nome, email) VALUES (?, ?)';
 
@@ -34,6 +34,20 @@ app.post('/usuarios', (req, res) => {
         res.status(201).json({ id: result.insertId, nome, email });
     });
 });
+
+// Rota para Excluir usuário do banco ( Delete )
+app.delete('/usuarios/:id', (req, res) => {
+    const { id } = req.params.id;
+    const sql = 'DELETE FROM usuarios WHERE id = ?';
+
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Erro ao deletar no MySQL:', err.message);
+        } return res.status(500).send('Erro ao deletar no banco');
+        res.status(200).send('Usuário excluido com sucesso!');
+    })
+
+} )
 
 
 // Liga o servidor na porta 3000
