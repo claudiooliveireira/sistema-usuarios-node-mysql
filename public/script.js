@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${user.nome}</td>
                     <td>${user.email}</td>
                     <td>
+                    <button class="btn btn-primary btn-sm" onClick="editarUsuario(${user.id})">Editar</botton>
                     <button class="btn btn-danger btn-sm" onClick="excluirUsuario(${user.id})">Excluir</button> 
                     </td>
                 </tr>`;
@@ -67,24 +68,28 @@ function excluirUsuario(id) {
 
 }
 
-/*
-// Função de Excluir usuário
-function excluirUsuario(id) {
-    if (confirm('Tem certeza que deseja excluir este usuário?')){
+// Função para editar usuário ( UPDATE ) (PUT)
+function editarUsuario(id) {
+    const novoNome = prompt("Digite o novo nome:");
+    const novoEmail = prompt("Digite o novo e-mail:");
+
+    if (novoNome && novoEmail) {
         fetch(`/usuarios/${id}`, {
-            method: 'DELETE'
-        }).then(res=> {
-            if(res.ok) {
-                alert('Usuário removido com sucesso!');
-                location.reload(); // Recarrega a lista atualizada
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: novoNome, email: novoEmail })
+        }).then(res => {
+            if (res.ok) {
+                alert('Usuário atualizado com sucesso!');
+                location.reload();
             } else {
-                alert('Erro ao excluir usuário' + res.status);
+                alert('Erro ao atualizar');
             }
-        }).catch(err => console.error('Erro na requisição:', err));
+        }).catch(err => console.error('Erro:', err));
     }
 
+
 }
-    */
 
 
 

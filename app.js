@@ -20,6 +20,7 @@ app.get('/usuarios', (req, res) => {
         res.json(rows);
 
     });
+
 });
 
 // Rota para RECEBER os dados do formulário 
@@ -33,11 +34,12 @@ app.post('/usuarios', (req, res) => {
         if (err) return res.status(500).send(err);
         res.status(201).json({ id: result.insertId, nome, email });
     });
+
 });
 
 // Rota para Excluir usuário do banco ( Delete )
 app.delete('/usuarios/:id', (req, res) => {
-    const { id } = req.params.id;
+    const { id } = req.params;
     const sql = 'DELETE FROM usuarios WHERE id = ?';
 
     db.query(sql, [id], (err, result) => {
@@ -45,9 +47,28 @@ app.delete('/usuarios/:id', (req, res) => {
             console.error('Erro ao deletar no MySQL:', err.message);
         } return res.status(500).send('Erro ao deletar no banco');
         res.status(200).send('Usuário excluido com sucesso!');
-    })
+    });
 
-} )
+} );
+
+// Rota receber o PUT, editar usupario
+app.put('/usuarios/:id', (req, res) => {
+    const { id } = req.params;
+    const { nome, email } = req.body;
+    const sql = 'UPDATE usuarios SET nome = ?, email = ? WHERE id = ?';
+
+    db.query(sql, [nome, email, id], (err, result) => {
+        if (err) {
+            console.error('Erro ao atualizar no MySQL:', err);
+            return res.status(500).send('Erro no banco');
+        }
+
+        console.log('Usuário atualizado com sucesso!')
+        res.status(200).send('Atualizado com sucesso!');
+    });
+
+});
+
 
 
 // Liga o servidor na porta 3000
