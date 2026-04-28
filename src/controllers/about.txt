@@ -1,0 +1,3 @@
+===A lógica das rotas===
+
+O Conttroller é quem recebe a requisição do usuário, pede ao Model para fazer o trabalho pesado e devolve a resposta para o frontend.
