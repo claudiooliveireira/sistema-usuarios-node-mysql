@@ -44,12 +44,21 @@ form.addEventListener('submit', (event) => {
             'Content-Type' : 'application/json'
         },
         body: JSON.stringify({ nome: nome, email: email })
-    }).then(res => res.json()).then(novoUsuario => {
-        console.log('Sucesso:', novoUsuario);
-        form.reset(); // Limpa os campos
-        location.reload(); // Recarrega a página para mostrar o novo usuário na tabela
-    });
-});
+    }).then(async res => {
+        // Se o status for 200 ou 201 (sucesso)
+        if (res.ok) {
+            alert('Cadastrado com sucesso!');
+            location.reload();
+        }else {
+            // Se o status for 400(Erro de validação)
+            const erro = await res.json();
+            alert('Atenção: ' + erro.message); // Will show: "nome e email são obrigatório"
+        }
+    }).catch(err => {
+        console.log('Erro na requisição', err);
+    })});
+
+    
 
 // Função de Excluir usuário
 function excluirUsuario(id) {

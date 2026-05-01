@@ -8,7 +8,7 @@ exports.listarUsuarios = (req, res) => {
     });
 };
  
-// atualizar usuários
+// atualizar usuários Put
 exports.atualizarUsuario = (req, res) => {
     const { id } = req.params;
     const { nome, email } = req.body;
@@ -24,16 +24,36 @@ exports.atualizarUsuario = (req, res) => {
     });
 };
 
-// Criar usuários
+// Criar usuários Create, agora com Validação 
 exports.criarUsuario = (req, res) => {
-    const { nome, email } = req.body;
+    // Pegando os dados e limpando os espaços inúteis com .trim()
+    const nome = req.body.nome ? req.body.nome.trim() : "";
+    const email = req.body.email ? req.body.email.trim() : "";
+    const apenasLetras = /^[A-Za-zÀ-ÿ ]+$/; // Essa Regex diz: "Só aceite letras ( maiúscula, minúscula) e espaço"
+
+
+
+    // VALIDAÇÃO: usando Expressões Regulares ( Regex ) A "Peneira" fina
+    if (!apenasLetras.test(nome) || nome.length < 3) {// Essa Regex diz: "Só aceite letras ( maiúscula, minúscula) e espaço", e se for maior que 3 caracteres
+        return res.status(400).json({ message: "O nome deve conter apenas letras e ter pelo menos 3 caracteres!"})
+    }
+
+    // Se tiver '@' no email, continua a (validação básica)
+    if (!email || !email.includes('@')){ // se não inclui @ no email
+        return res.status(400).json({ message: "Insira um e-mail válido"})
+    }
+
+
     User.create(nome, email, (err, result) => {
-        if (err) return res.status(500).json({error: err.message });
-        res.status(201).json({ id: result.insertId, nome, email });
+        if (err) {
+            console.error("Erro no Banco:", err)
+            return res.status(500).json({error:"Erro interno ao salvar."});
+    }
+    res.status(201).json({ id: result.insertId, nome, email });
     });
 };
 
-// Deletar usuário
+// Deletar usuário Delete
 exports.deletarUsuario = (req, res) => {
     const { id } = req.params;
     User.delete(id, (err, result) => {
