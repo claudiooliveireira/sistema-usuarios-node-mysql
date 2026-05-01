@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${user.nome}</td>
                     <td>${user.email}</td>
                     <td>
-                    <button class="btn btn-primary btn-sm" onClick="editarUsuario(${user.id})">Editar</botton>
+                    <button class="btn btn-primary btn-sm" onClick="editarUsuario(${user.id}, '${user.nome}', '${user.email}')">Editar</botton>
                     <button class="btn btn-danger btn-sm" onClick="excluirUsuario(${user.id})">Excluir</button> 
                     </td>
                 </tr>`;
@@ -67,8 +67,8 @@ function excluirUsuario(id) {
     }
 
 }
-
-// Função para editar usuário ( UPDATE ) (PUT)
+/*
+// Função para editar usuário ( UPDATE ) (PUT), esse método o usuário editava pelo prompt, agora vou colocar para editar numa janela no site com op modal do bootstrap
 function editarUsuario(id) {
     const novoNome = prompt("Digite o novo nome:");
     const novoEmail = prompt("Digite o novo e-mail:");
@@ -87,10 +87,42 @@ function editarUsuario(id) {
             }
         }).catch(err => console.error('Erro:', err));
     }
+}
+*/
+// Novo Edita usuário
+function editarUsuario(id, nome, email) {
+    document.getElementById('editId').value = id;
+    document.getElementById('editNome').value = nome;
+    document.getElementById('editEmail').value = email;
 
+    //comando do Bootstrap para abrir o modal via JS
+    const meuModal = new bootstrap.Modal(document.getElementById('modalEditar'));
+    meuModal.show();
+
+    console.log(meuModal);
 
 }
 
+// Enviar os dados novos para o servidor, botão de salvar edição
+function salvarEdicao(){
+    const id = document.getElementById('editId').value;
+    const nome = document.getElementById('editNome').value;
+    const email = document.getElementById('editEmail').value;
+
+    fetch(`/usuarios/${id}`, {
+        method : 'PUT',
+        headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify({nome, email})
+    }).then(res => {
+        if (res.ok) {
+            alert('Usuário atualizado com sucesso!');
+            location.reload(); // Recarrega para mostrar a mudança
+        }
+    })
+
+
+
+}
 
 
 
