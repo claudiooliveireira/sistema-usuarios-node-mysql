@@ -16,6 +16,10 @@ const User = {
     delete:(id, callback) => {
         const sql = 'DELETE FROM usuarios WHERE id = ?';
         db.query(sql, [id], callback);
+    },
+    findByEmail: (email, callback) => { // procurar um usuáro pelo email
+        const sql = 'SELECT * FROM usuarios WHERE email = ?'
+        db.query(sql, [email], callback);
     }
 
 };

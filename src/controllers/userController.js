@@ -33,7 +33,7 @@ exports.criarUsuario = (req, res) => {
 
 
 
-    // VALIDAÇÃO: usando Expressões Regulares ( Regex ) A "Peneira" fina
+    // VALIDAÇÃO: usando Expressões Regulares ( Regex ) A "Peneira" fina validação de Regex e Length
     if (!apenasLetras.test(nome) || nome.length < 3) {// Essa Regex diz: "Só aceite letras ( maiúscula, minúscula) e espaço", e se for maior que 3 caracteres
         return res.status(400).json({ message: "O nome deve conter apenas letras e ter pelo menos 3 caracteres!"})
     }
@@ -43,14 +43,27 @@ exports.criarUsuario = (req, res) => {
         return res.status(400).json({ message: "Insira um e-mail válido"})
     }
 
+    // VALIDAÇÃO: Checar duplicidade
+    User.findByEmail(email, (err, results) => {
+        if (err) return res.status(500).json({ message: "Erro ao verificar e-mail."});
 
-    User.create(nome, email, (err, result) => {
-        if (err) {
-            console.error("Erro no Banco:", err)
-            return res.status(500).json({error:"Erro interno ao salvar."});
-    }
-    res.status(201).json({ id: result.insertId, nome, email });
+        if (results.length > 0){
+            // se achou alguém com esse e-mail, barrado aqui
+            return res.status(400).json({ message: "Este e-mail já está cadastrado!"});
+        }
+
+        // Se não achou, o create é chamado 
+        User.create(nome, email, (err, result) => {
+            if (err){
+                 return res.status(500).json({error: "Erro ao salvar"});
+            }
+            return res.status(201).json({message: "Usuário criado!", id: result.insertId });
+        });
+
     });
+
+
+    
 };
 
 // Deletar usuário Delete

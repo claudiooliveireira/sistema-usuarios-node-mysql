@@ -47,12 +47,19 @@ form.addEventListener('submit', (event) => {
     }).then(async res => {
         // Se o status for 200 ou 201 (sucesso)
         if (res.ok) {
-            alert('Cadastrado com sucesso!');
-            location.reload();
+            mostrarNotificacao('Usuário cadastrado com sucesso!', 'bg-success');
+            setTimeout(() => location.reload(), 3000); // espera 2 segundo para recarregar 
+
         }else {
-            // Se o status for 400(Erro de validação)
-            const erro = await res.json();
-            alert('Atenção: ' + erro.message); // Will show: "nome e email são obrigatório"
+            // Tenta ler o JSON do erro
+            const dadosErro = await res.json().catch({ message: "Erro desconhecido no servidor"})
+
+            // Se dadosErro.message não existir, ele usa a frase depois do ||
+            const mensagemFinal = dadosErro.message || "Erro ao processar requisição";
+
+            mostrarNotificacao('Atenção: ' + mensagemFinal, 'bg-danger'); 
+
+            
         }
     }).catch(err => {
         console.log('Erro na requisição', err);
@@ -76,29 +83,8 @@ function excluirUsuario(id) {
     }
 
 }
-/*
-// Função para editar usuário ( UPDATE ) (PUT), esse método o usuário editava pelo prompt, agora vou colocar para editar numa janela no site com op modal do bootstrap
-function editarUsuario(id) {
-    const novoNome = prompt("Digite o novo nome:");
-    const novoEmail = prompt("Digite o novo e-mail:");
 
-    if (novoNome && novoEmail) {
-        fetch(`/usuarios/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome: novoNome, email: novoEmail })
-        }).then(res => {
-            if (res.ok) {
-                alert('Usuário atualizado com sucesso!');
-                location.reload();
-            } else {
-                alert('Erro ao atualizar');
-            }
-        }).catch(err => console.error('Erro:', err));
-    }
-}
-*/
-// Novo Edita usuário
+// Função de Editar usuário
 function editarUsuario(id, nome, email) {
     document.getElementById('editId').value = id;
     document.getElementById('editNome').value = nome;
@@ -108,11 +94,10 @@ function editarUsuario(id, nome, email) {
     const meuModal = new bootstrap.Modal(document.getElementById('modalEditar'));
     meuModal.show();
 
-    console.log(meuModal);
 
 }
 
-// Enviar os dados novos para o servidor, botão de salvar edição
+// Função de Enviar os dados novos para o servidor, botão de salvar edição
 function salvarEdicao(){
     const id = document.getElementById('editId').value;
     const nome = document.getElementById('editNome').value;
@@ -133,6 +118,26 @@ function salvarEdicao(){
 
 }
 
+// Função que mostra a notificação na página Toast
+function mostrarNotificacao(mensagem, cor = 'bg-primary') {
+    const toastElement = document.getElementById('liveToast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    // Define a mensagem 
+    toastMessage.innerText = mensagem;
+
+    // Limpa as cores antigas para não acumular
+    toastElement.classList.remove('bg-primary', 'bg-success', 'bg-danger');
+
+    // Adiciona a classe de estrutura básica + a cor nova 
+    toastElement.classList.add('toast', 'align-items-center', 'text-white', 'border-0', cor);
+
+    // Inicializa e mostra o Toast do Bootstrap
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+
+
+}
 
 
 
