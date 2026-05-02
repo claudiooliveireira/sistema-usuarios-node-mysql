@@ -1,1 +1,1 @@
-===Configuração do banco de dados===
+===Configuração conexão do banco de dados===

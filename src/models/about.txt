@@ -1,2 +1,3 @@
 ===As queries SQL===
 
+adminModel: responsável por buscar o admin no banco quando tentar logar.
