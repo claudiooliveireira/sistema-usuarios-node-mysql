@@ -139,6 +139,19 @@ function mostrarNotificacao(mensagem, cor = 'bg-primary') {
 
 }
 
+// Função de Boas vindas ao admin logado
+async function carregarDadosAdmin() {
+    const response = await fetch('/admin-logado');
+    const data = await response.json();
+
+    if (response.ok) {
+        document.getElementById('boas-vindas').innerText = `Bem-vindo, ${data.nome}!`;
+    }
+} 
+
+// Chama a função quando a página carregar
+carregarDadosAdmin();
+
 
 
        

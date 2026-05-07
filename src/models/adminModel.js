@@ -1,6 +1,12 @@
 const db = require('../config/db');
 
 const Admin = {
+    // Buscar o admin para conferir a senha deposi
+     findByEmail: (email, callback) => {
+        const sql = 'SELECT * FROM admins WHERE email = ?';
+        db.query(sql, [email], callback);
+    },
+
     // Função para criar o admin 
     create: (nome, email, senhaHash, callback) => {
         const sql = 'INSERT INTO admins (nome, email, senha) VALUES (?, ?, ?)';
@@ -11,15 +17,13 @@ const Admin = {
             }
             callback(null, result);
         });
-    }
+    },
+   
 };
 
 
 module.exports = Admin;
 
 /*
-findByEmail: (email, callback) => {
-        const sql = 'SELECT * FROM admins WHERE email = ?';
-        db.query(sql, [email], callback);
-    },
+
 */
