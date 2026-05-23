@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const Admin = require('./src/models/adminModel');
 
 const saltRounds = 10; // Nível de segurança da criptografia
-const senhaPura = '123456'; // senha escolhida
+const senhaPura = 'Exemplo123456'; // senha escolhida
 
 bcrypt.hash(senhaPura, saltRounds, (err,hash) => {
     if (err) {
